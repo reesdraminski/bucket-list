@@ -2,8 +2,46 @@ html {
     font-family: sans-serif;
 }
 
+form {
+    margin: 0;
+}
+
+ul {
+    list-style-type: none;
+    line-height: 1.5;
+    padding-left: .5em;
+}
+
+button, input[type=submit] {
+    background: white;
+    color: black;
+
+    border: 1px solid black;
+    border-radius: 4px;
+
+    padding: .75em;
+}
+
+button:hover {
+    cursor: pointer;
+}
+
+fieldset {
+    border-color: black;
+    border-width: 1px;
+    border-radius: 4px;
+}
+
 .text-center {
     text-align: center;
+}
+
+.underline {
+    text-decoration: underline;
+}
+
+.strikethrough {
+    text-decoration: line-through;
 }
 
 #card {
@@ -25,35 +63,6 @@ html {
     
     box-sizing: border-box;
     padding: 1em;
-}
-
-form {
-    margin: 0;
-}
-
-#saveItems, #getRandomItem, #addItems {
-    background: #28A745;
-    color: white;
-
-    border: 1px solid #28A745;
-    border-radius: 4px;
-
-    padding: .75em;
-}
-
-#removeCurrentItem {
-    background: #DC3545;
-    color: white;
-
-    border: 1px solid #DC3545;
-    border-radius: 4px;
-    padding: .75em;
-}
-
-fieldset {
-    border-color: black;
-    border-width: 1px;
-    border-radius: 4px;
 }
 
 #saveItems {

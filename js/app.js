@@ -1,14 +1,15 @@
 const SAVE_LOCATION = "bucket-list";
 
-const cardEl = document.getElementById("card");
 const modalEl = document.getElementById("itemEntryModal");
+const cardEl = document.getElementById("card");
 const taskEl = document.getElementById("task");
+
 const addItemsForm = document.getElementById("addItemsForm");
 const itemsInput = document.getElementById("itemsInput");
 
 const addItemsButton = document.getElementById("addItems");
 const randomItemsButton = document.getElementById("getRandomItem");
-const removeCurrentItemButton = document.getElementById("removeCurrentItem");
+const markItemAsCompleteButton = document.getElementById("markAsComplete");
 
 // working memory copy of the user's bucket list
 let bucketList = [];
@@ -52,6 +53,9 @@ let currentItem;
 
     // add functionality to the buttons on the page
     bindButtonActions();
+
+    // show the user's bucket list
+    displayList();
 })();
 
 /**
@@ -61,18 +65,25 @@ function getRandomItem() {
     // there cannot be random item access with less than two elements
     if (bucketList.length <= 1) return;
 
+    // get the list of items that are not hidden and not complete
+    const filteredList = bucketList
+        .filter(x => !x.complete && x.show);
+
+    // there cannot be random item access with less than two elements
+    if (filteredList.length <= 1) return;
+
     // prevent the same item that is being shown currnetly from being chosen randomly
     let item;
     do 
     {
-        item = bucketList[Math.floor(Math.random() * bucketList.length)];
+        item = filteredList[Math.floor(Math.random() * filteredList.length)];
     } while (currentItem == item);
 
     // set the currentItem to the randomly selected item
     currentItem = item;
     
     // update the task item in the card element
-    taskEl.innerHTML = currentItem;
+    taskEl.innerHTML = currentItem.task;
 }
 
 /**
@@ -119,19 +130,69 @@ function overrideFormSubmitAction() {
         const cleanedItems = (delimiter == "lsv" ? itemsRaw.split("\n") : itemsRaw.split(","))
             .map(x => x.trim());
 
-        // add new items to the bucket list array
-        bucketList.push(...cleanedItems);
+        // create objects from the items
+        const itemsToSave = cleanedItems
+            .map(item => ({ task: item, complete: false, show: true }));
 
-        // save updated bucket list area
-        localStorage.setItem(SAVE_LOCATION, JSON.stringify(bucketList));
+        // add new items to the bucket list array
+        bucketList.push(...itemsToSave);
+
+        // save updated bucket list array
+        saveBucketList();
+
+        // show random item
+        getRandomItem();
     }
+}
+
+/**
+ * Save the user's bucket list to localStorage.
+ */
+function saveBucketList() {
+    localStorage.setItem(SAVE_LOCATION, JSON.stringify(bucketList));
+}
+
+/**
+ * Show the user's bucket list.
+ */
+function displayList() {
+    // show all bucket list items
+    bucketList
+        .forEach((item, i) => {
+            const li = document.createElement("li");
+            li.className = item.complete ? "strikethrough" : "";
+
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.checked = item.show;
+            checkbox.id = `item${i}`;
+            checkbox.disabled = item.complete;
+
+            // listen for checkbox change values
+            checkbox.onchange = e => {
+                // change the item's show property
+                item.show = e.target.checked;
+                    
+                saveBucketList();
+            }
+
+            const label = document.createElement("label");
+            label.textContent = item.task;
+            label.setAttribute("for", `item${i}`);
+                
+            li.appendChild(checkbox);
+            li.appendChild(label);
+
+            document.getElementById("bucketList").appendChild(li);
+        });
 }
 
 /**
  * Bind the onclick action to the add items button.
  */
 function bindButtonActions() {
-    // show the modal on add item button click
+
+
     addItemsButton.onclick = () => {
         // show modal
         modalEl.style.display = "block";
@@ -140,7 +201,18 @@ function bindButtonActions() {
         document.getElementById("close").onclick = () => modalEl.style.display = "none";
     }
 
+    // show a random item on get random item button click
     randomItemsButton.onclick = getRandomItem;
 
-    removeCurrentItemButton.onclick = removeCurrentItem;
+    // allow users to mark the bucket list item as complete (without deleting the item)
+    markItemAsCompleteButton.onclick = () => {
+        // mark item as complete
+        currentItem.complete = true;
+
+        // save updated bucket list array
+        saveBucketList();
+
+        // show a new random item
+        getRandomItem();
+    }
 }
