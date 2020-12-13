@@ -3,17 +3,18 @@ const SAVE_LOCATION = "bucket-list";
 const modalEl = document.getElementById("itemEntryModal");
 const cardEl = document.getElementById("card");
 const taskEl = document.getElementById("task");
+const bucketListEl = document.getElementById("bucketList");
 
 const addItemsForm = document.getElementById("addItemsForm");
 const itemsInput = document.getElementById("itemsInput");
 
-const addItemsButton = document.getElementById("addItems");
 const randomItemsButton = document.getElementById("getRandomItem");
-const markItemAsCompleteButton = document.getElementById("markAsComplete");
+const addItemsButton = document.getElementById("addItems");
+const toggleItemsButton = document.getElementById("completeItems");
+const deleteItemsButton = document.getElementById("deleteItems");
 
-// working memory copy of the user's bucket list
-let bucketList = [];
-let currentItem;
+// global state
+let bucketList = [], currentItem;
 
 /**
  * Initialize the UI.
@@ -65,9 +66,9 @@ function getRandomItem() {
     // there cannot be random item access with less than two elements
     if (bucketList.length <= 1) return;
 
-    // get the list of items that are not hidden and not complete
+    // get the list of items that are not complete
     const filteredList = bucketList
-        .filter(x => !x.complete && x.show);
+        .filter(x => !x.complete);
 
     // there cannot be random item access with less than two elements
     if (filteredList.length <= 1) return;
@@ -84,23 +85,6 @@ function getRandomItem() {
     
     // update the task item in the card element
     taskEl.innerHTML = currentItem.task;
-}
-
-/**
- * Delete the current item shown in the card from the bucket list and save the changes.
- */
-function removeCurrentItem() {
-    // if there is no current item, exit to prevent errors
-    if (!currentItem) return;
-
-    // remove the item from the bucket list
-    bucketList.splice(bucketList.indexOf(currentItem), 1);
-
-    // save the updated bucket list to localStorage
-    localStorage.setItem(SAVE_LOCATION, JSON.stringify(bucketList));
-
-    // refresh the card element
-    getRandomItem();
 }
 
 /**
@@ -127,7 +111,7 @@ function overrideFormSubmitAction() {
         itemsInput.value = "";
 
         // split items depending on delimiter and clean trailing whitespaces
-        const cleanedItems = (delimiter == "lsv" ? itemsRaw.split("\n") : itemsRaw.split(","))
+        const cleanedItems = itemsRaw.split("\n")
             .map(x => x.trim());
 
         // create objects from the items
@@ -142,6 +126,9 @@ function overrideFormSubmitAction() {
 
         // show random item
         getRandomItem();
+
+        // show updated list
+        displayList();
     }
 }
 
@@ -156,34 +143,32 @@ function saveBucketList() {
  * Show the user's bucket list.
  */
 function displayList() {
+    // clear bucket list element
+    bucketListEl.innerHTML = "";
+
     // show all bucket list items
     bucketList
         .forEach((item, i) => {
+            // create a list element and cross it out if the user has completed the item
             const li = document.createElement("li");
             li.className = item.complete ? "strikethrough" : "";
 
+            // create a checkbox that is used to select items to toggle or delete
             const checkbox = document.createElement("input");
             checkbox.type = "checkbox";
-            checkbox.checked = item.show;
             checkbox.id = `item${i}`;
-            checkbox.disabled = item.complete;
 
-            // listen for checkbox change values
-            checkbox.onchange = e => {
-                // change the item's show property
-                item.show = e.target.checked;
-                    
-                saveBucketList();
-            }
-
+            // add a label that can also toggle the checkbox
             const label = document.createElement("label");
             label.textContent = item.task;
             label.setAttribute("for", `item${i}`);
-                
+            
+            // add both items to the list item
             li.appendChild(checkbox);
             li.appendChild(label);
 
-            document.getElementById("bucketList").appendChild(li);
+            // add the list item to the bucket list element
+            bucketListEl.appendChild(li);
         });
 }
 
@@ -191,8 +176,7 @@ function displayList() {
  * Bind the onclick action to the add items button.
  */
 function bindButtonActions() {
-
-
+    // on add item button click, show modal
     addItemsButton.onclick = () => {
         // show modal
         modalEl.style.display = "block";
@@ -204,15 +188,49 @@ function bindButtonActions() {
     // show a random item on get random item button click
     randomItemsButton.onclick = getRandomItem;
 
-    // allow users to mark the bucket list item as complete (without deleting the item)
-    markItemAsCompleteButton.onclick = () => {
-        // mark item as complete
-        currentItem.complete = true;
+    // toggle completion of selected list items on toggle button click
+    toggleItemsButton.onclick = () => {
+        // get all checkboxes from the list
+        [...document.querySelectorAll("input[type=checkbox]")]
+            .forEach((box, i) => {
+                // if the list item is selected
+                if (box.checked) 
+                {
+                    // get the corresponding bucket list item
+                    const item = bucketList[i];
 
-        // save updated bucket list array
+                    // toggle the completion status
+                    item.complete = !item.complete;
+                }
+            });
+
+        // save the changes to the bucket list
         saveBucketList();
 
-        // show a new random item
-        getRandomItem();
+        // render the updated list
+        displayList();
+    }
+
+    // delete selected items on delete button click
+    deleteItemsButton.onclick = () => {
+        // get all checkboxes from the list
+        [...document.querySelectorAll("input[type=checkbox]:checked")]
+            // get indices of items
+            .map(el => parseInt(el.id.replace("item", ""), 10))
+            // get the bucket list items at previously found indices
+            .map(i => bucketList[i])
+            .forEach(item => {
+                // find index of item since it will shift if deleting multiple items in a series
+                const index = bucketList.findIndex(x => x == item);
+
+                // delete item from bucket list array
+                bucketList.splice(index, 1);
+            });
+
+        // save the changes to the bucket list
+        saveBucketList();
+
+        // render the updated list
+        displayList();
     }
 }

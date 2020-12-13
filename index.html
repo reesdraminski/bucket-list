@@ -22,21 +22,6 @@
                     </p>
 
                     <form id="addItemsForm">
-                        <fieldset style="margin-bottom: .5em; display: none">
-                            <legend style="font-weight: bold">How are you entering values?</legend>
-                            <input type="radio" name="delimiter" id="lsv" value="lsv" checked/>
-                            <label for="lsv">Line Separated Values</label>
-                            <p>
-                                This means that each of your bucket list items would be separated by newlines (you pressing the enter button).
-                            </p>
-
-                            <input type="radio" name="delimiter" id="csv" value="csv"/>
-                            <label for="csv">Comma Separated Values</label>
-                            <p>
-                                This means that each of your bucket list items would be separated by commas.
-                            </p>
-                        </fieldset>
-
                         <span><b>Enter Your Items:</b></span>
                         <textarea id="itemsInput" name="items"></textarea>
 
@@ -46,25 +31,23 @@
             </div>
         </div>
 
-        <h3 class="text-center" style="margin-bottom: 5px">Random Item</h3>
+        <h3 class="text-center" style="margin-bottom: 10px">Random Item:</h3>
         <div id="card">
             <span id="task"></span>
         </div>
 
-        <p class="text-center">
-            <button id="getRandomItem">Get Random Item</button>
-            <button id="markAsComplete">Mark Current Item as Complete</button>
+        <p class="text-center" style="margin-top: 10px;">
+            <button id="getRandomItem"> &#x1f500; Get New Item</button>
         </p>
 
         <section style="width: 85%; margin: 0 auto;">
-            <h3>Your List</h3>
-            <p>
-                By unchecking a list item, you will hide it from being randomly selected in the card view. You cannot change the visibility of completed items because they will not show up again.
-            </p>
+            <h3 style="margin-bottom: 0;">Your List</h3>
 
-            <ul id="bucketList"></ul>
+            <ul id="bucketList" style="margin-top: 5px;"></ul>
 
-            <button id="addItems">Add Items</button>
+            <button id="addItems">&#10133; Add Items</button>
+            <button id="completeItems">&#128260; Toggle Completion of Selected Items</button>
+            <button id="deleteItems">&#128465; Delete Selected Items</button>
         </section>
 
         <script src="js/app.js"></script>
