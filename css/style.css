@@ -9,7 +9,7 @@ form {
 ul {
     list-style-type: none;
     line-height: 1.5;
-    padding-left: .5em;
+    padding-left: 0;
 }
 
 button, input[type=submit] {

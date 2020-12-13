@@ -146,6 +146,12 @@ function displayList() {
     // clear bucket list element
     bucketListEl.innerHTML = "";
 
+    // add a message to user when they have no items in their list
+    if (bucketList.length === 0)
+    {
+        bucketListEl.innerHTML += "<li><i>No items yet</i></li>";
+    }
+
     // show all bucket list items
     bucketList
         .forEach((item, i) => {
