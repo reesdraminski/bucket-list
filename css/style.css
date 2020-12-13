@@ -1,0 +1,106 @@
+html {
+    font-family: sans-serif;
+}
+
+.text-center {
+    text-align: center;
+}
+
+#card {
+    /* horizontally center the card */
+    margin: 0 auto;
+
+    /* set the size of the card */
+    height: 100px;
+    width: 80%;
+
+    /* add border and round the corners */
+    border: 1px solid black;
+    border-radius: 4px;
+
+    /* center text horizontally and vertically */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    box-sizing: border-box;
+    padding: 1em;
+}
+
+form {
+    margin: 0;
+}
+
+#saveItems, #getRandomItem, #addItems {
+    background: #28A745;
+    color: white;
+
+    border: 1px solid #28A745;
+    border-radius: 4px;
+
+    padding: .75em;
+}
+
+#removeCurrentItem {
+    background: #DC3545;
+    color: white;
+
+    border: 1px solid #DC3545;
+    border-radius: 4px;
+    padding: .75em;
+}
+
+fieldset {
+    border-color: black;
+    border-width: 1px;
+    border-radius: 4px;
+}
+
+#saveItems {
+    margin-top: .5em;
+}
+
+#itemsInput {
+    width: 100%;
+    height: 10em;
+
+    border: 1px solid black;
+    border-radius: 4px;
+}
+
+/* from: https://www.w3schools.com/howto/howto_css_modals.asp */
+.modal {
+    /* Hidden by default */
+    display: none; 
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+  
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+  
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}

@@ -1,0 +1,62 @@
+<html>
+    <head>
+        <title>Bucket List</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="shortcut icon" href="img/favicon.png">
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+
+    <body>
+        <h1 class="text-center" style="margin-bottom: 0">Bucket List</h1>
+
+        <p class="text-center">
+            <button id="addItems">Add Items</button>
+        </p>
+
+        <div id="itemEntryModal" class="modal">
+            <div class="modal-content">
+                <span id="close" class="close">&times;</span>
+
+                <h3>Let's Add Items to Your Bucket List!</h3>
+
+                <p>
+                    Please have each task on its own line by pressing enter after each item, so that the application can know what individual tasks are.
+                </p>
+
+                <form id="addItemsForm">
+                    <fieldset style="margin-bottom: .5em; display: none">
+                        <legend style="font-weight: bold">How are you entering values?</legend>
+                        <input type="radio" name="delimiter" id="lsv" value="lsv" checked/>
+                        <label for="lsv">Line Separated Values</label>
+                        <p>
+                            This means that each of your bucket list items would be separated by newlines (you pressing the enter button).
+                        </p>
+
+                        <input type="radio" name="delimiter" id="csv" value="csv"/>
+                        <label for="csv">Comma Separated Values</label>
+                        <p>
+                            This means that each of your bucket list items would be separated by commas.
+                        </p>
+                    </fieldset>
+
+                    <span><b>Enter Your Items:</b></span>
+                    <textarea id="itemsInput" name="items"></textarea>
+
+                    <input id="saveItems" type="submit" value="Save">
+                </form>
+            </div>
+        </div>
+
+        <div id="card">
+            <span id="task"></span>
+        </div>
+
+        <p class="text-center">
+            <button id="getRandomItem">Get Random Item</button>
+            <button id="removeCurrentItem">Remove Current Item from Bucket List</button>
+        </p>
+
+        <script src="js/app.js"></script>
+    </body>
+</html>
